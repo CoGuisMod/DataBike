@@ -8,15 +8,15 @@ import Navbar from "../../components/Navbar";
 
 const Dashboard = () => {
   return (
-    <>
+    <div className="flex w-full h-screen gap-4">
       {/* Navbar */}
       <Navbar />
 
       {/* Inner routes */}
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
       </Routes>
-    </>
+    </div>
   );
 };
 
