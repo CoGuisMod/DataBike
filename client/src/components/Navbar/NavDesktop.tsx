@@ -78,7 +78,7 @@ const NavDesktop = () => {
         </NavLink>
 
         <NavLink
-          to="/dashboard/overview"
+          to="/dashboard/bills"
           className={({ isActive }) =>
             (isActive ? "bg-red-500 font-medium" : "hover:text-slate-50/50") +
             " flex justify-start items-center gap-1 rounded-md p-1 transition-colors duration-200 ease-in-out"

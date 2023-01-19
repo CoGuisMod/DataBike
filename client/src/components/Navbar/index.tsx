@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 
+/* Navs imports */
+import NavDesktop from "./NavDesktop";
+import NavMobile from "./NavMobile";
+
 /* Icons import */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import NavMobile from "./NavMobile";
-import NavDesktop from "./NavDesktop";
 
 const Navbar = () => {
   const [showExtendedNav, setShowExtendedNav] = useState(false);
@@ -38,7 +40,7 @@ const Navbar = () => {
     >
       <button
         onClick={() => setShowExtendedNav(!showExtendedNav)}
-        className="absolute top-8 right-0 flex justify-center items-center bg-slate-900 rounded-full text-lg w-8 h-8 translate-x-1/2"
+        className="absolute top-10 right-0 flex justify-center items-center bg-slate-900 rounded-full text-lg w-8 h-8 translate-x-1/2"
       >
         <FontAwesomeIcon
           icon={faChevronRight}

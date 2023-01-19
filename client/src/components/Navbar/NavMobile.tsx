@@ -23,7 +23,7 @@ const NavMobile = () => {
 
       <div className="py-4" />
 
-      <p className="text-center leading-none">-</p>
+      <p className="text-slate-50/50 text-center leading-none">-</p>
 
       {/* Navigation */}
       <nav className="flex flex-col w-full">
@@ -40,7 +40,7 @@ const NavMobile = () => {
         {/* Inventory */}
         <div className="py-2" />
 
-        <p className="text-center leading-none">-</p>
+        <p className="text-slate-50/50 text-center leading-none">-</p>
 
         <NavLink
           to="/dashboard/products"
@@ -65,7 +65,7 @@ const NavMobile = () => {
         {/* Sales */}
         <div className="py-2" />
 
-        <p className="text-center leading-none">-</p>
+        <p className="text-slate-50/50 text-center leading-none">-</p>
 
         <NavLink
           to="/dashboard/analytics"
@@ -78,7 +78,7 @@ const NavMobile = () => {
         </NavLink>
 
         <NavLink
-          to="/dashboard/overview"
+          to="/dashboard/bills"
           className={({ isActive }) =>
             (isActive ? "bg-red-500 font-medium" : "hover:text-slate-50/50") +
             " flex justify-center items-center rounded-md p-1 transition-colors duration-200 ease-in-out"
@@ -90,7 +90,7 @@ const NavMobile = () => {
         {/* Users */}
         <div className="py-2" />
 
-        <p className="text-center leading-none">-</p>
+        <p className="text-slate-50/50 text-center leading-none">-</p>
 
         <NavLink
           to="/dashboard/users"
