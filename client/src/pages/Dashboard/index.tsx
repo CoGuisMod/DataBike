@@ -7,13 +7,14 @@ import Warehouse from "./Warehouse";
 import Analytics from "./Analytics";
 import Bills from "./Bills";
 import Users from "./Users";
+import Profile from "./Profile";
 
 /* Component imports */
 import Navbar from "../../components/Navbar";
 
 const Dashboard = () => {
   return (
-    <div className="flex w-full h-screen gap-4">
+    <div className="flex w-full h-screen">
       {/* Navbar */}
       <Navbar />
 
@@ -31,6 +32,9 @@ const Dashboard = () => {
 
         {/* Managment */}
         <Route path="/users" element={<Users />} />
+
+        {/*  */}
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </div>
   );
