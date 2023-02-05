@@ -20,7 +20,7 @@ const Dashboard = () => {
 
       {/* Inner routes */}
       <Routes>
-        <Route path="/home" element={<Home />} />
+        <Route index path="/home" element={<Home />} />
 
         {/* Inventory */}
         <Route path="/products" element={<Products />} />

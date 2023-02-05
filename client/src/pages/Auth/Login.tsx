@@ -12,7 +12,7 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    navigate("/dashboard");
+    navigate("/dashboard/home");
   };
 
   return (
