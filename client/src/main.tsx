@@ -7,6 +7,7 @@ import "./index.css";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 
+/* Reducers */
 import authReducer from "./redux/authSlice";
 import globalReducer from "./redux/globalSlice";
 

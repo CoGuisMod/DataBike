@@ -58,6 +58,7 @@ import {
   faMoneyBillTrendUp,
   faUserAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import StatsCard from "../../components/StatsCard";
 
 const todaysReport = {
   sales: 480000,
@@ -154,120 +155,40 @@ const Home = () => {
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-4">
         {/* Today's sales */}
-        <div className="flex justify-between items-center bg-slate-800 rounded-md w-full p-2">
-          <div>
-            <p className="text-sm text-slate-50/50">Ventas de hoy</p>
-            <p className="font-medium text-lg">
-              $ {todaysReport.sales.toLocaleString("es-CO")}{" "}
-              <span
-                className={`text-sm ${
-                  todaysReport.salesPercentage > 0
-                    ? "text-green-400"
-                    : "text-red-400"
-                }`}
-              >
-                {todaysReport.salesPercentage > 0
-                  ? "+" + todaysReport.salesPercentage
-                  : todaysReport.salesPercentage}
-                &#37;
-              </span>
-            </p>
-          </div>
-
-          <div className="flex items-center justify-center bg-slate-900 rounded-full w-10 h-10">
-            <FontAwesomeIcon
-              icon={faDollarSign}
-              className="text-lg text-slate-50"
-            />
-          </div>
-        </div>
+        <StatsCard
+          text="Ventas de hoy"
+          amount={todaysReport.sales}
+          percentage={todaysReport.salesPercentage}
+          icon={faDollarSign}
+          type="positive"
+        />
 
         {/* Today's earning */}
-        <div className="flex justify-between items-center bg-slate-800 rounded-md w-full p-2">
-          <div>
-            <p className="text-sm text-slate-50/50">Ganancias de hoy</p>
-            <p className="font-medium text-lg">
-              $ {todaysReport.earning.toLocaleString("es-CO")}{" "}
-              <span
-                className={`text-sm ${
-                  todaysReport.earningPercentage > 0
-                    ? "text-green-400"
-                    : "text-red-400"
-                }`}
-              >
-                {todaysReport.earningPercentage > 0
-                  ? "+" + todaysReport.earningPercentage
-                  : todaysReport.earningPercentage}
-                &#37;
-              </span>
-            </p>
-          </div>
-
-          <div className="flex items-center justify-center bg-slate-900 rounded-full w-10 h-10">
-            <FontAwesomeIcon
-              icon={faMoneyBillTrendUp}
-              className="text-lg text-slate-50"
-            />
-          </div>
-        </div>
+        <StatsCard
+          text="Ganancias de hoy"
+          amount={todaysReport.earning}
+          percentage={todaysReport.earningPercentage}
+          icon={faMoneyBillTrendUp}
+          type="positive"
+        />
 
         {/* Today's costumers */}
-        <div className="flex justify-between items-center bg-slate-800 rounded-md w-full p-2">
-          <div>
-            <p className="text-sm text-slate-50/50">Clientes de hoy</p>
-            <p className="font-medium text-lg">
-              {todaysReport.costumers.toLocaleString("es-CO")}{" "}
-              <span
-                className={`text-sm ${
-                  todaysReport.costumersPercentage > 0
-                    ? "text-green-400"
-                    : "text-red-400"
-                }`}
-              >
-                {todaysReport.costumersPercentage > 0
-                  ? "+" + todaysReport.costumersPercentage
-                  : todaysReport.costumersPercentage}
-                &#37;
-              </span>
-            </p>
-          </div>
-
-          <div className="flex items-center justify-center bg-slate-900 rounded-full w-10 h-10">
-            <FontAwesomeIcon
-              icon={faUserAlt}
-              className="text-lg text-slate-50"
-            />
-          </div>
-        </div>
+        <StatsCard
+          text="Clientes de hoy"
+          amount={todaysReport.costumers}
+          percentage={todaysReport.costumersPercentage}
+          icon={faUserAlt}
+          type="positive"
+        />
 
         {/* Total products */}
-        <div className="flex justify-between items-center bg-slate-800 rounded-md w-full p-2">
-          <div>
-            <p className="text-sm text-slate-50/50">Stock total</p>
-            <p className="font-medium text-lg">
-              {todaysReport.totalProducts.toLocaleString("es-CO")}{" "}
-              <span
-                className={`text-sm ${
-                  todaysReport.totalProductsPercentage > 0
-                    ? "text-green-400"
-                    : "text-red-400"
-                }`}
-              >
-                {todaysReport.totalProductsPercentage > 0
-                  ? "&#43;" + todaysReport.totalProductsPercentage
-                  : todaysReport.totalProductsPercentage}
-                &#37;
-              </span>
-            </p>
-          </div>
-
-          <div className="flex items-center justify-center bg-slate-900 rounded-full w-10 h-10">
-            <FontAwesomeIcon
-              icon={faBoxesStacked}
-              className="text-lg text-slate-50"
-            />
-          </div>
-        </div>
+        <StatsCard
+          text="Stock total"
+          amount={todaysReport.totalProducts}
+          percentage={todaysReport.totalProductsPercentage}
+          icon={faBoxesStacked}
+          type="positive"
+        />
       </div>
 
       <div className="py-2" />

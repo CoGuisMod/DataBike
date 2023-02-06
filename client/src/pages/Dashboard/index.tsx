@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
-/* Page imports */
+/* Pages imports */
 import Home from "./Home";
 import Products from "./Products";
 import Warehouse from "./Warehouse";
@@ -33,7 +33,7 @@ const Dashboard = () => {
         {/* Managment */}
         <Route path="/users" element={<Users />} />
 
-        {/*  */}
+        {/* Settings */}
         <Route path="/profile" element={<Profile />} />
       </Routes>
     </div>
