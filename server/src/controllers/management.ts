@@ -1,95 +1,134 @@
-import { Request, RequestHandler, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import bcrypt from "bcrypt";
+
+import createHttpError from "http-errors";
 
 import UserModel from "../models/user";
 
-/* Create an user */
+/* Creates an user */
 export const createUser: RequestHandler = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
+    /* Find the user by the email and if found return the user, if not found return null */
+    const findUser = await UserModel.findOne({ email: req.body.email });
+
+    /* If the user exists returns an error */
+    if (findUser) {
+      throw createHttpError(401, "User already exist.");
+    }
+
+    /* Encrypts the password */
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
     const newUser = new UserModel({
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       email: req.body.email,
-      password: req.body.password,
+      password: hashedPassword,
       role: req.body.role,
     });
+
+    /* Saves the user in the database */
     await newUser.save();
 
     /* Sends back the created user */
-    res.status(201).json(newUser);
+    res.status(200).json(newUser);
   } catch (error) {
-    /* Handles if an error occurs */
-    let errorMessage = "An unknown error has ocurred.";
-    if (error instanceof Error) {
-      errorMessage = error.message;
-      res.status(500).json({ error: errorMessage });
-    }
+    next(error);
   }
 };
 
-/* Read an user */
-export const readUser: RequestHandler = async (req: Request, res: Response) => {
+/* Reads an user */
+export const readUser: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const user = await UserModel.find({ email: req.body.email });
-    res.status(200).json(user);
-  } catch (error) {
-    /* Handles if an error occurs */
-    let errorMessage = "An unknown error has ocurred.";
-    if (error instanceof Error) {
-      errorMessage = error.message;
-      res.status(500).json({ error: errorMessage });
+    /* Find the user by the email and if found return the user, if not found return null */
+    const findUser = await UserModel.findOne({ email: req.body.email });
+
+    /* If the deleted user is null return an error */
+    if (!findUser) {
+      throw createHttpError(401, "User do not found.");
     }
+
+    res.status(200).json(findUser);
+  } catch (error) {
+    next(error);
   }
 };
 
-/* Update an user */
+/* Updates an user */
 export const updateUser: RequestHandler = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
-  } catch (error) {
-    /* Handles if an error occurs */
-    let errorMessage = "An unknown error has ocurred.";
-    if (error instanceof Error) {
-      errorMessage = error.message;
-      res.status(500).json({ error: errorMessage });
+    /* Encrypts the password */
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    /* Find the user by the id, updates the values given in the object and retur the updated user, if not user is found returns null */
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      req.body._id,
+      {
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        email: req.body.email,
+        password: hashedPassword,
+        role: req.body.role,
+      },
+      { new: true }
+    );
+
+    /* If the updated user is null return an error */
+    if (!updatedUser) {
+      throw createHttpError(401, "User do not found.");
     }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    next(error);
   }
 };
 
-/* Delete an user */
+/* Deletes an user */
 export const deleteUser: RequestHandler = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
-  } catch (error) {
-    /* Handles if an error occurs */
-    let errorMessage = "An unknown error has ocurred.";
-    if (error instanceof Error) {
-      errorMessage = error.message;
-      res.status(500).json({ error: errorMessage });
+    /* Finds the user by id and deletes it, the return the deleted user, if not user is found returns null */
+    const deletedUser = await UserModel.findByIdAndDelete(req.body._id);
+
+    /* If the deleted user is null return an error */
+    if (!deletedUser) {
+      throw createHttpError(401, "User do not found.");
     }
+
+    res.status(200).json(deletedUser);
+  } catch (error) {
+    next(error);
   }
 };
 
-/* Read all users */
+/* Reads all users */
 export const readAllUsers: RequestHandler = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
-    const users = await UserModel.find().exec();
+    /* Finds all the users */
+    const users = await UserModel.find();
+
     res.status(200).json(users);
   } catch (error) {
-    let errorMessage = "An unknown error has ocurred.";
-    if (error instanceof Error) {
-      errorMessage = error.message;
-      res.status(500).json({ error: errorMessage });
-    }
+    next(error);
   }
 };
