@@ -3,6 +3,12 @@ import bcrypt from "bcrypt";
 
 import createHttpError from "http-errors";
 
+import {
+  createUserSchema,
+  deleteUserSchema,
+  readUserSchema,
+  updateUserSchema,
+} from "../validators/management.validator";
 import UserModel from "../models/user";
 
 /* Creates an user */
@@ -12,8 +18,12 @@ export const createUser: RequestHandler = async (
   next: NextFunction
 ) => {
   try {
-    /* Find the user by the email and if found return the user, if not found return null */
-    const findUser = await UserModel.findOne({ email: req.body.email });
+    /* Gets and validates the user inputs */
+    const { first_name, last_name, username, password, role } =
+      createUserSchema.parse(req.body);
+
+    /* Find the user by the username and if found return the user, if not found return null */
+    const findUser = await UserModel.findOne({ username });
 
     /* If the user exists returns an error */
     if (findUser) {
@@ -21,14 +31,14 @@ export const createUser: RequestHandler = async (
     }
 
     /* Encrypts the password */
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new UserModel({
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      email: req.body.email,
+      first_name,
+      last_name,
+      username,
       password: hashedPassword,
-      role: req.body.role,
+      role,
     });
 
     /* Saves the user in the database */
@@ -48,14 +58,18 @@ export const readUser: RequestHandler = async (
   next: NextFunction
 ) => {
   try {
-    /* Find the user by the email and if found return the user, if not found return null */
-    const findUser = await UserModel.findOne({ email: req.body.email });
+    /* Gets and validates the user inputs */
+    const { _id } = readUserSchema.parse(req.body);
 
-    /* If the deleted user is null return an error */
+    /* Find the user by the id and if found return the user, if not found return null */
+    const findUser = await UserModel.findById(_id);
+
+    /* If there is no user returns an error */
     if (!findUser) {
       throw createHttpError(401, "User do not found.");
     }
 
+    /* Sends back the find user */
     res.status(200).json(findUser);
   } catch (error) {
     next(error);
@@ -69,27 +83,51 @@ export const updateUser: RequestHandler = async (
   next: NextFunction
 ) => {
   try {
-    /* Encrypts the password */
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    /* Gets and validates the user inputs */
+    const { _id, first_name, last_name, username, password, role } =
+      updateUserSchema.parse(req.body);
 
-    /* Find the user by the id, updates the values given in the object and retur the updated user, if not user is found returns null */
-    const updatedUser = await UserModel.findByIdAndUpdate(
-      req.body._id,
-      {
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        email: req.body.email,
-        password: hashedPassword,
-        role: req.body.role,
-      },
-      { new: true }
-    );
+    let updatedUser = null;
+
+    /* When the user typed a new password */
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      /* Find the user by the id, updates the values given in the object and retur the updated user, if not user is found returns null */
+      updatedUser = await UserModel.findByIdAndUpdate(
+        _id,
+        {
+          first_name,
+          last_name,
+          username,
+          password: hashedPassword,
+          role,
+        },
+        { new: true }
+      );
+    }
+
+    /* When the user didn't typed a new password */
+    if (!password) {
+      /* Find the user by the id, updates the values given in the object and retur the updated user, if not user is found returns null */
+      updatedUser = await UserModel.findByIdAndUpdate(
+        _id,
+        {
+          first_name,
+          last_name,
+          username,
+          role,
+        },
+        { new: true }
+      );
+    }
 
     /* If the updated user is null return an error */
     if (!updatedUser) {
       throw createHttpError(401, "User do not found.");
     }
 
+    /* Sends back the updated user */
     res.status(200).json(updatedUser);
   } catch (error) {
     next(error);
@@ -103,14 +141,18 @@ export const deleteUser: RequestHandler = async (
   next: NextFunction
 ) => {
   try {
+    /* Gets and validates the user inputs */
+    const { _id } = deleteUserSchema.parse(req.body);
+
     /* Finds the user by id and deletes it, the return the deleted user, if not user is found returns null */
-    const deletedUser = await UserModel.findByIdAndDelete(req.body._id);
+    const deletedUser = await UserModel.findByIdAndDelete(_id);
 
     /* If the deleted user is null return an error */
     if (!deletedUser) {
       throw createHttpError(401, "User do not found.");
     }
 
+    /* Sends back the deleted user */
     res.status(200).json(deletedUser);
   } catch (error) {
     next(error);
@@ -127,6 +169,7 @@ export const readAllUsers: RequestHandler = async (
     /* Finds all the users */
     const users = await UserModel.find();
 
+    /* Sends back the find users */
     res.status(200).json(users);
   } catch (error) {
     next(error);

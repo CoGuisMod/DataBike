@@ -9,23 +9,25 @@ import {
   updateUser,
 } from "../controllers/management";
 
+import { authToken } from "../middlewares/authToken";
+
 const router = express.Router();
 
 /* -------------------------------------------------- User managment -------------------------------------------------- */
 
 /* Creates an user */
-router.post("/user", createUser);
+router.post("/user", authToken, createUser);
 
 /* Read an user */
-router.get("/user", readUser);
+router.get("/user", authToken, readUser);
 
 /* Update an user */
-router.put("/user", updateUser);
+router.patch("/user", authToken, updateUser);
 
 /* Delete an user */
-router.delete("/user", deleteUser);
+router.delete("/user", authToken, deleteUser);
 
 /* Read all users */
-router.get("/users", readAllUsers);
+router.get("/users", authToken, readAllUsers);
 
 export default router;

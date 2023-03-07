@@ -1,7 +1,9 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
+import { loginSchema } from "../validators/authValidator";
 import UserModel from "../models/user";
 
 /* Login */
@@ -11,18 +13,10 @@ export const login: RequestHandler = async (
   next: NextFunction
 ) => {
   try {
-    /* Validates if the email is empty */
-    if (!req.body.email) {
-      throw createHttpError(401, "Email is required.");
-    }
+    const { username, password } = loginSchema.parse(req.body);
 
-    /* Validates if the password is empty */
-    if (!req.body.password) {
-      throw createHttpError(401, "Password is required.");
-    }
-
-    /* Find the user by the email and if found return the user, if not found return null */
-    const user = await UserModel.findOne({ email: req.body.email });
+    /* Find the user by the username and if found return the user, if not found return null */
+    const user = await UserModel.findOne({ username });
 
     /* If there is no user return an error */
     if (!user) {
@@ -30,30 +24,21 @@ export const login: RequestHandler = async (
     }
 
     /* Compares the passwords */
-    const doPasswordsMatch = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
+    const doPasswordsMatch = await bcrypt.compare(password, user.password);
 
     /* If the passwords do not match return an error */
     if (!doPasswordsMatch) {
       throw createHttpError(401, "Password do not match");
     }
 
-    /* Sends back the created user */
-    res.status(200).json(user);
-  } catch (error) {
-    next(error);
-  }
-};
+    /* Creates the json token */
+    const authToken = jwt.sign(
+      { userId: user._id },
+      process.env.TOKEN_PRIVATE_KEY || ""
+    );
 
-/* Logout */
-export const logout: RequestHandler = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+    /* Sends back the created token */
+    res.status(200).header("Authorization", authToken).json(authToken);
   } catch (error) {
     next(error);
   }

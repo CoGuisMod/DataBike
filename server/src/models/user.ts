@@ -10,7 +10,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    email: {
+    username: {
       type: String,
       required: true,
       unique: true,
@@ -22,7 +22,7 @@ const userSchema = new Schema(
     role: {
       type: String,
       required: true,
-      enum: ["admin", "cashier"],
+      enum: ["admin", "super_admin", "cashier", "mechanic"],
     },
   },
   { timestamps: true }
